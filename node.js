@@ -7,19 +7,19 @@ app.use(bodyParser.json());
 
 const db = initDB();
 
-app.get("/users", (req, res) => {
-    db.all("SELECT * FROM users", [], (err, rows) => {
+app.get("/artist", (req, res) => {
+    db.all("SELECT * FROM artist", [], (err, rows) => {
         if (err) {
             res.status(500).json({"error": err.message});
         } else {
-            res.json({users: rows})
+            res.json({artist: rows})
         }
     });
 });
 
-app.get("/users/:id", (req, res) => {
+app.get("/artist/:id", (req, res) => {
     const { id } = req.params;
-    db.all("SELECT * FROM users where id is (?)", [id], (err, rows) => {
+    db.all("SELECT * FROM artist where id is (?)", [id], (err, rows) => {
         if (err) {
             res.status(500).json({"error": err.message});
         } else if (rows.length === 0) {
@@ -30,17 +30,17 @@ app.get("/users/:id", (req, res) => {
     })
 });
 
-app.post("/users", (req, res) => {
-    const { user: { username, password} } = req.body;
-    const insertStmt = "INSERT INTO users(username,password) VALUES (?,?)";
-    db.run(insertStmt, [username, password], function(err, result) {
+app.post("/artists", (req, res) => {
+    const { artist: { artistname, city} } = req.body;
+    const insertStmt = "INSERT INTO artist(artistname,city) VALUES (?,?)";
+    db.run(insertStmt, [artistname, city], function(err, result) {
         if (err) {
             res.status(500).json({ "error": err.message });
         } else {
             res.json({
                 id: this.lastID,
-                username,
-                password
+                artistname,
+                city
             })
         }
     })
