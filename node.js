@@ -1,33 +1,49 @@
-const axios = require("axios");
+const express = require('express');
+const bodyParser = require('body-parser');
+const { initDB } = require('./db');
 
-const encodedParams = new URLSearchParams();
-encodedParams.append("apiKey", "<REQUIRED>");
-
-const options = {
-  method: 'POST',
-  url: 'https://ticketmasterstefan-skliarovv1.p.rapidapi.com/searchEvents',
-  headers: {
-    'content-type': 'application/x-www-form-urlencoded',
-    'X-RapidAPI-Key': 'cae9c614f0msh97670e10a5255f8p13a338jsn233109cac926',
-    'X-RapidAPI-Host': 'Ticketmasterstefan-skliarovV1.p.rapidapi.com'
-  },
-  data: encodedParams
-};
-
-axios.request(options).then(function (response) {
-	console.log(response.data);
-}).catch(function (error) {
-	console.error(error);
-});
-
-const express = require("express");
-const { url } = require("inspector");
 const app = express();
+app.use(bodyParser.json());
 
-app.get("/", function (req, res) {
-    res.sendFile(__dirname + "/index.html");
-});
-app.listen(8080, function () {
-    console.log("Server is running on localhost:8080");
+const db = initDB();
+
+app.get("/users", (req, res) => {
+    db.all("SELECT * FROM users", [], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else {
+            res.json({users: rows})
+        }
+    });
 });
 
+app.get("/users/:id", (req, res) => {
+    const { id } = req.params;
+    db.all("SELECT * FROM users where id is (?)", [id], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else if (rows.length === 0) {
+            res.json({user: {}})
+        } else {
+            res.json({user: rows[0]})
+        }
+    })
+});
+
+app.post("/users", (req, res) => {
+    const { user: { username, password} } = req.body;
+    const insertStmt = "INSERT INTO users(username,password) VALUES (?,?)";
+    db.run(insertStmt, [username, password], function(err, result) {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+        } else {
+            res.json({
+                id: this.lastID,
+                username,
+                password
+            })
+        }
+    })
+});
+
+app.listen(4000, () => console.log("Simple server running on http://localhost:8080"))
