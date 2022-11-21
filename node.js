@@ -46,4 +46,4 @@ app.post("/users", (req, res) => {
     })
 });
 
-app.listen(4000, () => console.log("Simple server running on http://localhost:8080"))
+app.listen(8080, () => console.log("Simple server running on http://localhost:8080"))
