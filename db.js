@@ -2,29 +2,29 @@ const sqlite3 = require("sqlite3");
 
 const DB_ADDR = ":memory:";
 
-const users = [
+const artist = [
     {
-        username: "1lameuser",
-        password: "secret_password"
+        artistname: "1lameuser",
+        city: "secret_password"
     },
     {
-        username: "cool_user_87",
-        password: "notPassword!"
+        artistname: "cool_user_87",
+        city: "notPassword!"
     },
 ];
 
 const initDB = () => {
     const db = new sqlite3.Database(DB_ADDR);
     db.serialize(() => {
-        db.run(`CREATE TABLE users (
+        db.run(`CREATE TABLE artist (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE,
-            password TEXT
+            artistname TEXT UNIQUE,
+            city TEXT
         )`);
 
-        const insertStmt = db.prepare("INSERT INTO users(username,password) VALUES (?,?)");
-        users.forEach(({ username, password}, i) => {
-            insertStmt.run([username, password]);
+        const insertStmt = db.prepare("INSERT INTO artist(artistname,city) VALUES (?,?)");
+        artist.forEach(({ artistname, city}, i) => {
+            insertStmt.run([artistname, city]);
         })
         insertStmt.finalize();
     });
