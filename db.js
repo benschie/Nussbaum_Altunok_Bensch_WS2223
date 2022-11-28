@@ -4,12 +4,35 @@ const DB_ADDR = ":memory:";
 
 const artist = [
     {
-        artistname: "1lameuser",
-        city: "secret_password"
+        artistname: "Ed Sheeran",
+        concertCity: "Köln"
     },
     {
-        artistname: "cool_user_87",
-        city: "notPassword!"
+        artistname: "Snoop Dogg",
+        concertCity: "Berlin"
+    },
+    {
+        artistname: "Justin Bieber",
+        concertCity: "München"
+    },
+    {
+        artistname: "Ariana Grande",
+        concertCity: "Köln"
+    },
+];
+
+const concertCity = [
+    {
+        cityname: "Köln",
+        nearestHotels: "Hyatt Regency Köln, Pullman Köln, Steigenberger Hotel Köln, 25hours Hotel Koeln The Circle"
+    },
+    {
+        cityname: "Berlin",
+        nearestHotels: "Steigenberger Hotel am Kanzleramt, Hotel Adlon Kempinski Berlin, Titanic Gendarmenmarkt Berlin, fjord hotel berlin"
+    },
+    {
+        cityname: "München",
+        nearestHotels: "Hotel Cocoon Stachus, Steigenberger Hotel München, Maritim Hotel München, Hyperion Hotel München"
     },
 ];
 
@@ -19,14 +42,26 @@ const initDB = () => {
         db.run(`CREATE TABLE artist (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             artistname TEXT UNIQUE,
-            city TEXT
+            concertCity TEXT
         )`);
-
-        const insertStmt = db.prepare("INSERT INTO artist(artistname,city) VALUES (?,?)");
-        artist.forEach(({ artistname, city}, i) => {
-            insertStmt.run([artistname, city]);
+        const insertArtist = db.prepare("INSERT INTO artist(artistname,concertCity) VALUES (?,?)");
+        artist.forEach(({ artistname, concertCity}, i) => {
+            insertArtist.run([artistname, concertCity]);
         })
-        insertStmt.finalize();
+        insertArtist.finalize();
+
+
+        db.run(`CREATE TABLE concertCity (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cityname TEXT UNIQUE,
+            nearestHotels TEXT
+        )`);
+        const insertConcert = db.prepare("INSERT INTO concertCity(cityname,nearestHotels) VALUES (?,?)");
+        concertCity.forEach(({cityname,nearestHotels}, i) => {
+            insertConcert.run([cityname,nearestHotels]);
+        })
+        insertConcert.finalize();
+
     });
     return db;
 };
