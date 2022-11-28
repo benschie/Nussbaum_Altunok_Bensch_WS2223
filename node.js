@@ -30,17 +30,57 @@ app.get("/artist/:id", (req, res) => {
     })
 });
 
-app.post("/artists", (req, res) => {
-    const { artist: { artistname, city} } = req.body;
-    const insertStmt = "INSERT INTO artist(artistname,city) VALUES (?,?)";
-    db.run(insertStmt, [artistname, city], function(err, result) {
+app.post("/artist", (req, res) => {
+    const { artist: { artistname, concertCity} } = req.body;
+    const insertStmt = "INSERT INTO artist(artistname,concertCity) VALUES (?,?)";
+    db.run(insertStmt, [artistname, concertCity], function(err, result) {
         if (err) {
             res.status(500).json({ "error": err.message });
         } else {
             res.json({
                 id: this.lastID,
                 artistname,
-                city
+                concertCity
+            })
+        }
+    })
+});
+
+
+app.get("/concertCity", (req, res) => {
+    db.all("SELECT * FROM concertCity", [], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else {
+            res.json({concertCity: rows})
+        }
+    });
+});
+
+app.get("/concertCity/:id", (req, res) => {
+    const { id } = req.params;
+    db.all("SELECT * FROM concertCity where id is (?)", [id], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else if (rows.length === 0) {
+            res.json({user: {}})
+        } else {
+            res.json({user: rows[0]})
+        }
+    })
+});
+
+app.post("/concertCity", (req, res) => {
+    const { concertCity: { cityname,nearestHotels} } = req.body;
+    const insertStmt = "INSERT INTO concertCity(cityname,nearestHotels) VALUES (?,?)";
+    db.run(insertStmt, [cityname,nearestHotels], function(err, result) {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+        } else {
+            res.json({
+                id: this.lastID,
+                cityname,
+                nearestHotels
             })
         }
     })
