@@ -23,9 +23,9 @@ app.get("/artist/:id", (req, res) => {
         if (err) {
             res.status(500).json({"error": err.message});
         } else if (rows.length === 0) {
-            res.json({user: {}})
+            res.json({artistname: {}})
         } else {
-            res.json({user: rows[0]})
+            res.json({artistname: rows[0]})
         }
     })
 });
@@ -63,9 +63,9 @@ app.get("/ort/:id", (req, res) => {
         if (err) {
             res.status(500).json({"error": err.message});
         } else if (rows.length === 0) {
-            res.json({user: {}})
+            res.json({cityname: {}})
         } else {
-            res.json({user: rows[0]})
+            res.json({cityname: rows[0]})
         }
     })
 });
@@ -85,5 +85,121 @@ app.post("/ort", (req, res) => {
         }
     })
 });
+
+app.get("/bestellung", (req, res) => {
+    db.all("SELECT * FROM bestellung", [], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else {
+            res.json({bestellung: rows})
+        }
+    });
+});
+
+app.get("/bestellung/:id", (req, res) => {
+    const { id } = req.params;
+    db.all("SELECT * FROM bestellung where bestellung_id is (?)", [bestellung_id], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else if (rows.length === 0) {
+            res.json({bestellung: {}})
+        } else {
+            res.json({bestellung: rows[0]})
+        }
+    })
+});
+
+app.put("/bestellung", (req, res) => {
+    const { bestellung: { bestellung_id,kunde_id} } = req.body;
+    const insertStmt = "INSERT INTO bestellung(bestellung_id,kunde_id) VALUES (?,?)";
+    db.run(insertStmt, [bestellung_id,kunde_id], function(err, result) {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+        } else {
+            res.json({
+                bestellung_id: this.lastID,
+                kunde_id
+            })
+        }
+    })
+});
+
+app.get("/kunde", (req, res) => {
+    db.all("SELECT * FROM kunde", [], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else {
+            res.json({kunde: rows})
+        }
+    });
+});
+
+app.get("/kunde/:id", (req, res) => {
+    const { id } = req.params;
+    db.all("SELECT * FROM artist where id is (?)", [kunde_id], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else if (rows.length === 0) {
+            res.json({kunde: {}})
+        } else {
+            res.json({kunde: rows[0]})
+        }
+    })
+});
+
+app.post("/kunde", (req, res) => {
+    const { kunde: {kunde_id,name} } = req.body;
+    const insertStmt = "INSERT INTO kunde(kunde_id,name) VALUES (?,?)";
+    db.run(insertStmt, [kunde_id,name], function(err, result) {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+        } else {
+            res.json({
+                kunde_id: this.lastID,
+                name
+            })
+        }
+    })
+});
+
+
+app.get("/artist/:id/ticket", (req, res) => {
+    db.all("SELECT * FROM ticket", [], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else {
+            res.json({ticket: rows})
+        }
+    });
+});
+
+app.get("/artist/:id/ticket/:id", (req, res) => {
+    const { id } = req.params;
+    db.all("SELECT * FROM ticket where id is (?)", [ticket_id], (err, rows) => {
+        if (err) {
+            res.status(500).json({"error": err.message});
+        } else if (rows.length === 0) {
+            res.json({ticket: {}})
+        } else {
+            res.json({ticket: rows[0]})
+        }
+    })
+});
+
+app.post("/artist/:id/ticket", (req, res) => {
+    const { ticket: { ticket_id} } = req.body;
+    const insertStmt = "INSERT INTO ticket(ticket_id) VALUES (?,?)";
+    db.run(insertStmt, [ticket_id], function(err, result) {
+        if (err) {
+            res.status(500).json({ "error": err.message });
+        } else {
+            res.json({
+                ticket_id: this.lastID,
+            })
+        }
+    })
+});
+
+
 
 app.listen(1234, () => console.log("Simple server running on http://localhost:1234"))

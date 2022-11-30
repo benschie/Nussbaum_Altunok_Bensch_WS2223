@@ -36,6 +36,21 @@ const ort = [
     },
 ];
 
+const bestellung = [
+    {
+        bestellung_id: 3456,
+        kunde_id: 7655
+    },
+];
+
+
+const kunde = [
+    {
+        kunde_id: 7655,
+        name: "Borat"
+    },
+];
+
 const initDB = () => {
     const db = new sqlite3.Database(DB_ADDR);
     db.serialize(() => {
@@ -57,11 +72,34 @@ const initDB = () => {
             cityname TEXT UNIQUE,
             nearestHotels TEXT
         )`);
-        const insertConcert = db.prepare("INSERT INTO ort(cityname,nearestHotels) VALUES (?,?)");
+        const insertOrt = db.prepare("INSERT INTO ort(cityname,nearestHotels) VALUES (?,?)");
         ort.forEach(({cityname,nearestHotels}, i) => {
-            insertConcert.run([cityname,nearestHotels]);
+            insertOrt.run([cityname,nearestHotels]);
         })
-        insertConcert.finalize();
+        insertOrt.finalize();
+
+
+        db.run(`CREATE TABLE bestellung (
+            bestellung_id INTEGER PRIMARY KEY,
+            kunde_id INTEGER
+        )`);
+        const insertBestellung = db.prepare("INSERT INTO bestellung(bestellung_id,kunde_id) VALUES (?,?)");
+        bestellung.forEach(({bestellung_id,kunde_id}, i) => {
+            insertBestellung.run([bestellung_id,kunde_id]);
+        })
+        insertBestellung.finalize();
+        
+
+        db.run(`CREATE TABLE kunde (
+            kunde_id INTEGER PRIMARY KEY,
+            name TEXT
+        )`);
+        const insertKunde = db.prepare("INSERT INTO kunde(kunde_id,name) VALUES (?,?)");
+        kunde.forEach(({kunde_id,name}, i) => {
+            insertKunde.run([kunde_id,name]);
+        })
+        insertKunde.finalize();
+
 
     });
     return db;
