@@ -5,19 +5,19 @@ const DB_ADDR = ":memory:";
 const artist = [
     {
         artistname: "Ed Sheeran",
-        city: "Köln"
+        cityname: "Köln"
     },
     {
         artistname: "Snoop Dogg",
-        city: "Berlin"
+        cityname: "Berlin"
     },
     {
         artistname: "Justin Bieber",
-        city: "München"
+        cityname: "München"
     },
     {
         artistname: "Ariana Grande",
-        city: "Köln"
+        cityname: "Köln"
     },
 ];
 
@@ -42,16 +42,12 @@ const initDB = () => {
         db.run(`CREATE TABLE artist (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             artistname TEXT UNIQUE,
-            city TEXT,
-
-            CONSTRAINT fk_city FOREIGN KEY city REFERENCES ort (cityname)
-            ON DELETE SET DEFAULT
-            ON UPDATE CASCADE
+            cityname TEXT
         )`);
 
-        const insertArtist = db.prepare("INSERT INTO artist(artistname,city) VALUES (?,?)");
-        artist.forEach(({ artistname, city}, i) => {
-            insertArtist.run([artistname, city]);
+        const insertArtist = db.prepare("INSERT INTO artist(artistname,cityname) VALUES (?,?)");
+        artist.forEach(({ artistname, cityname}, i) => {
+            insertArtist.run([artistname, cityname]);
         })
         insertArtist.finalize();
 
