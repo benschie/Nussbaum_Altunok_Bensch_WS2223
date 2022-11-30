@@ -39,7 +39,8 @@ const ort = [
 const bestellung = [
     {
         bestellung_id: 3456,
-        kunde_id: 7655
+        kunde_id: 7655,
+        ticket_id: 7655768
     },
 ];
 
@@ -48,6 +49,12 @@ const kunde = [
     {
         kunde_id: 7655,
         name: "Borat"
+    },
+];
+
+const ticket = [
+    {
+        ticket_id: 7655768,
     },
 ];
 
@@ -88,7 +95,7 @@ const initDB = () => {
             insertBestellung.run([bestellung_id,kunde_id]);
         })
         insertBestellung.finalize();
-        
+
 
         db.run(`CREATE TABLE kunde (
             kunde_id INTEGER PRIMARY KEY,
@@ -99,6 +106,16 @@ const initDB = () => {
             insertKunde.run([kunde_id,name]);
         })
         insertKunde.finalize();
+
+
+        db.run(`CREATE TABLE ticket (
+            ticket_id INTEGER PRIMARY KEY,
+        )`);
+        const insertTicket = db.prepare("INSERT INTO ticket(ticket_id) VALUES (?,?)");
+        ticket.forEach(({ticket_id}, i) => {
+            insertTicket.run([ticket_id]);
+        })
+        insertTicket.finalize();
 
 
     });
