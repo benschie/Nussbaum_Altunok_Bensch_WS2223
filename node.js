@@ -31,35 +31,35 @@ app.get("/artist/:id", (req, res) => {
 });
 
 app.post("/artist", (req, res) => {
-    const { artist: { artistname, concertCity} } = req.body;
-    const insertStmt = "INSERT INTO artist(artistname,concertCity) VALUES (?,?)";
-    db.run(insertStmt, [artistname, concertCity], function(err, result) {
+    const { artist: { artistname, city} } = req.body;
+    const insertStmt = "INSERT INTO artist(artistname,city) VALUES (?,?)";
+    db.run(insertStmt, [artistname, city], function(err, result) {
         if (err) {
             res.status(500).json({ "error": err.message });
         } else {
             res.json({
                 id: this.lastID,
                 artistname,
-                concertCity
+                city
             })
         }
     })
 });
 
 
-app.get("/concertCity", (req, res) => {
-    db.all("SELECT * FROM concertCity", [], (err, rows) => {
+app.get("/ort", (req, res) => {
+    db.all("SELECT * FROM ort", [], (err, rows) => {
         if (err) {
             res.status(500).json({"error": err.message});
         } else {
-            res.json({concertCity: rows})
+            res.json({ort: rows})
         }
     });
 });
 
-app.get("/concertCity/:id", (req, res) => {
+app.get("/ort/:id", (req, res) => {
     const { id } = req.params;
-    db.all("SELECT * FROM concertCity where id is (?)", [id], (err, rows) => {
+    db.all("SELECT * FROM ort where id is (?)", [id], (err, rows) => {
         if (err) {
             res.status(500).json({"error": err.message});
         } else if (rows.length === 0) {
@@ -70,9 +70,9 @@ app.get("/concertCity/:id", (req, res) => {
     })
 });
 
-app.post("/concertCity", (req, res) => {
-    const { concertCity: { cityname,nearestHotels} } = req.body;
-    const insertStmt = "INSERT INTO concertCity(cityname,nearestHotels) VALUES (?,?)";
+app.post("/ort", (req, res) => {
+    const { ort: { cityname,nearestHotels} } = req.body;
+    const insertStmt = "INSERT INTO ort(cityname,nearestHotels) VALUES (?,?)";
     db.run(insertStmt, [cityname,nearestHotels], function(err, result) {
         if (err) {
             res.status(500).json({ "error": err.message });
