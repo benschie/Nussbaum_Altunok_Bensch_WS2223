@@ -163,6 +163,10 @@ app.post("/kunde", (req, res) => {
 });
 
 
+
+// Ab hier ist noch ein Bug
+
+
 app.get("/artist/:id/ticket", (req, res) => {
     db.all("SELECT * FROM ticket", [], (err, rows) => {
         if (err) {
@@ -173,7 +177,7 @@ app.get("/artist/:id/ticket", (req, res) => {
     });
 });
 
-/*
+
 
 app.get("/artist/:id/ticket/:id", (req, res) => {
     const { ticket_id } = req.params;
@@ -202,7 +206,7 @@ app.post("/artist/:id/ticket", (req, res) => {
     })
 });
 
-*/
+
 
 
 app.listen(1234, () => console.log("Simple server running on http://localhost:1234"))
