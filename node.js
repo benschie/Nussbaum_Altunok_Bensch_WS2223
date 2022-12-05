@@ -31,16 +31,16 @@ app.get("/artist/:id", (req, res) => {
 });
 
 app.post("/artist", (req, res) => {
-    const { artist: { artistname, city} } = req.body;
-    const insertStmt = "INSERT INTO artist(artistname,city) VALUES (?,?)";
-    db.run(insertStmt, [artistname, city], function(err, result) {
+    const { artist: { artistname, ortname} } = req.body;
+    const insertStmt = "INSERT INTO artist(artistname,ortname) VALUES (?,?)";
+    db.run(insertStmt, [artistname, ortname], function(err, result) {
         if (err) {
             res.status(500).json({ "error": err.message });
         } else {
             res.json({
                 id: this.lastID,
                 artistname,
-                city
+                ortname
             })
         }
     })
