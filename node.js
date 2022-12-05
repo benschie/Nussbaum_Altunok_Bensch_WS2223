@@ -1,9 +1,49 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { initDB } = require('./db');
+const cors = require('cors');
+const package = require('./package.json');
+const db = require('./db')
+
+const port = process.env.port || process.env.PORT || 1234;
+const apiroot = '/api';
 
 const app = express();
-app.use(bodyParser.json());
+
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(cors({origin: /http:\/\/localhost/}));
+app.options('*', cors());
+
+const router = express.Router();
+router.get('/', (req,res) => {
+    res.send(`${package.description} - v${package.version}`);
+});
+
+/*
+router.get('/accounts/:artist', (req,res) => {
+    const artistname = req.param.artistname
+    const artist = db[artistname];
+
+    if(!artist){
+        return res
+                .status(404)
+                .json({error: 'User does not exist'})
+    }
+
+    return res
+            .json(artist);
+
+});
+*/
+app.use(apiroot, router);
+
+app.listen(port, () => console.log("Simple server running on http://localhost:1234"));
+
+
+
+
+ 
+	
+/*
 
 const db = initDB();
 
@@ -207,6 +247,4 @@ app.post("/artist/:id/ticket", (req, res) => {
 });
 
 
-
-
-app.listen(1234, () => console.log("Simple server running on http://localhost:1234"))
+*/
