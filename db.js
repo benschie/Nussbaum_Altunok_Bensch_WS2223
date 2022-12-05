@@ -5,19 +5,19 @@ const DB_ADDR = ":memory:";
 const artist = [
     {
         artistname: "Ed Sheeran",
-        cityname: "Köln"
+        ortname: "Köln"
     },
     {
         artistname: "Snoop Dogg",
-        cityname: "Berlin"
+        ortname: "Berlin"
     },
     {
         artistname: "Justin Bieber",
-        cityname: "München"
+        ortname: "München"
     },
     {
         artistname: "Ariana Grande",
-        cityname: "Köln"
+        ortname: "Köln"
     },
 ];
 
@@ -39,7 +39,7 @@ const ort = [
 const bestellung = [
     {
         bestellung_id: 3456,
-        kunde_id: 7655,
+        kunde_id: 765534,
         ticket_id: 7655768
     },
 ];
@@ -54,7 +54,8 @@ const kunde = [
 
 const ticket = [
     {
-        ticket_id: 7655768,
+        ticket_id: 452,
+        artist: "Ed Sheeran"
     },
 ];
 
@@ -64,12 +65,12 @@ const initDB = () => {
         db.run(`CREATE TABLE artist (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             artistname TEXT UNIQUE,
-            cityname TEXT
+            ortname TEXT
         )`);
 
-        const insertArtist = db.prepare("INSERT INTO artist(artistname,cityname) VALUES (?,?)");
-        artist.forEach(({ artistname, cityname}, i) => {
-            insertArtist.run([artistname, cityname]);
+        const insertArtist = db.prepare("INSERT INTO artist(artistname,ortname) VALUES (?,?)");
+        artist.forEach(({ artistname, ortname}, i) => {
+            insertArtist.run([artistname, ortname]);
         })
         insertArtist.finalize();
 
@@ -110,10 +111,11 @@ const initDB = () => {
 
         db.run(`CREATE TABLE ticket (
             ticket_id INTEGER PRIMARY KEY,
+            artist TEXT
         )`);
-        const insertTicket = db.prepare("INSERT INTO ticket(ticket_id) VALUES (?,?)");
-        ticket.forEach(({ticket_id}, i) => {
-            insertTicket.run([ticket_id]);
+        const insertTicket = db.prepare("INSERT INTO ticket(ticket_id,artist) VALUES (?,?)");
+        ticket.forEach(({ticket_id,artist}, i) => {
+            insertTicket.run([ticket_id,artist]);
         })
         insertTicket.finalize();
 

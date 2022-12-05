@@ -135,7 +135,7 @@ app.get("/kunde", (req, res) => {
 });
 
 app.get("/kunde/:id", (req, res) => {
-    const { id } = req.params;
+    const { kunde_id } = req.params;
     db.all("SELECT * FROM artist where id is (?)", [kunde_id], (err, rows) => {
         if (err) {
             res.status(500).json({"error": err.message});
@@ -173,8 +173,10 @@ app.get("/artist/:id/ticket", (req, res) => {
     });
 });
 
+/*
+
 app.get("/artist/:id/ticket/:id", (req, res) => {
-    const { id } = req.params;
+    const { ticket_id } = req.params;
     db.all("SELECT * FROM ticket where id is (?)", [ticket_id], (err, rows) => {
         if (err) {
             res.status(500).json({"error": err.message});
@@ -187,19 +189,20 @@ app.get("/artist/:id/ticket/:id", (req, res) => {
 });
 
 app.post("/artist/:id/ticket", (req, res) => {
-    const { ticket: { ticket_id} } = req.body;
+    const { ticket: { ticket_id } } = req.body;
     const insertStmt = "INSERT INTO ticket(ticket_id) VALUES (?,?)";
     db.run(insertStmt, [ticket_id], function(err, result) {
         if (err) {
             res.status(500).json({ "error": err.message });
         } else {
             res.json({
-                ticket_id: this.lastID,
+                ticket_id
             })
         }
     })
 });
 
+*/
 
 
 app.listen(1234, () => console.log("Simple server running on http://localhost:1234"))
