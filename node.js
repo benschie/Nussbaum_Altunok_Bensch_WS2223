@@ -1,12 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const package = require('./package.json');
-const db = require('./db')
+const db = require('./database.json');
+const axios = require("axios")
+const fs = require('fs');
 
 const port = process.env.port || process.env.PORT || 1234;
 const apiroot = '/api';
 
 const app = express();
+
+
+//https://api.seatgeek.com/2/events?aid=123
+
+
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
@@ -14,26 +21,50 @@ app.use(cors({origin: /http:\/\/localhost/}));
 app.options('*', cors());
 
 const router = express.Router();
+
+
+router.get('/events', (req,res) => {
+    console.log("Bin drin")
+    axios.get("https://api.seatgeek.com/2/events?aid=123").then(resultat => {
+        res.json(resultat.data);
+    })
+})
+
+
 router.get('/', (req,res) => {
     res.send(`${package.description} - v${package.version}`);
 });
 
-/*
-router.get('/accounts/:artist', (req,res) => {
-    const artistname = req.param.artistname
-    const artist = db[artistname];
 
-    if(!artist){
-        return res
-                .status(404)
-                .json({error: 'User does not exist'})
+// GET /api/artist
+// -> gibt zurück ein artist
+router.get('/artist/:name', (req,res) => {
+
+    if(!req.params.name){
+        let rawdata = fs.readFileSync('./database.json');
+        let artists = JSON.parse(rawdata);
+            console.log(artists);
+        res.status(400)
+        .json(("gib mal ne name bitte"));
     }
-
-    return res
-            .json(artist);
-
+    const name = req.params.name;
+    let rawdata = fs.readFileSync('./database.json');
+    let artists = JSON.parse(rawdata);
+    
+    console.log(artists);
 });
-*/
+
+// GET /api/artist
+// -> gibt zurück alle kümstler im datenbank
+router.get('/artist', (req,res) => {
+    let rawdata = fs.readFileSync('./database.json');
+    let artists = JSON.parse(rawdata);
+    console.log(artists)
+    res.status(200)
+    .json(artists);
+});
+
+
 app.use(apiroot, router);
 
 app.listen(port, () => console.log("Simple server running on http://localhost:1234"));

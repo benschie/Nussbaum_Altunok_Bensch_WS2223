@@ -1,6 +1,16 @@
 {
-    "artist":{
-        "artistname": "Ed",
-        "auftritt_in": "Köln"
-    }
+    "artists": [
+        {
+            "name": "Sunny",
+            "auftritt_in": "Köln"
+        },
+        {
+            "name": "Sido",
+            "auftritt_in": "Köln"
+        },
+        {
+            "name": "Haze",
+            "auftritt_in": "Frankfurt"
+        }
+    ]
 }
