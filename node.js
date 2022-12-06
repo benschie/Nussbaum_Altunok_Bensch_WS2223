@@ -40,7 +40,7 @@ router.get('/', (req,res) => {
     res.send(`${package.description} - v${package.version}`);
 });
 
-
+/*
 // GET /api/artist
 // -> gibt zurück ein artist
 router.get('/artist/:name', (req,res) => {
@@ -60,7 +60,7 @@ router.get('/artist/:name', (req,res) => {
 });
 
 
-/*
+
 // GET /api/artist
 // -> gibt zurück alle kümstler im datenbank
 router.get('/artist', (req,res) => {
