@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const package = require('./package.json');
-const db = require('./database.json');
 const axios = require("axios")
 const fs = require('fs');
 
@@ -60,6 +59,8 @@ router.get('/artist/:name', (req,res) => {
     console.log(artists);
 });
 
+
+/*
 // GET /api/artist
 // -> gibt zurück alle kümstler im datenbank
 router.get('/artist', (req,res) => {
@@ -69,7 +70,7 @@ router.get('/artist', (req,res) => {
     res.status(200)
     .json(artists);
 });
-
+*/
 
 app.use(apiroot, router);
 
