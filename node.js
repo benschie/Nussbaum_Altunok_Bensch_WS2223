@@ -31,7 +31,7 @@ router.get('/events', (req,res) => {
 
 
 router.get('/hotels', (req,res) => {
-    axios.get("https://developers.expediagroup.com/docs/static/content/rapid/lodging/content/assets/EPS_Rapid_v3_postman_collection.json?lang=en-US").then(resultat => {
+    axios.get("https://developers.expediagroup.com/docs/static/content/api/assets/openapi/rapid-api.yaml?lang=en-US").then(resultat => {
         res.json(resultat.data);
     })
 })
