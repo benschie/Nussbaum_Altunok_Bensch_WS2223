@@ -11,7 +11,7 @@ const apiroot = '/api';
 const app = express();
 
 
-//https://api.seatgeek.com/2/events?aid=123
+// https://api.seatgeek.com/2/events?aid=123
 
 
 
@@ -24,12 +24,18 @@ const router = express.Router();
 
 
 router.get('/events', (req,res) => {
-    console.log("Bin drin")
     axios.get("https://api.seatgeek.com/2/events?aid=123").then(resultat => {
         res.json(resultat.data);
+        // console.log(result.data)
     })
 })
 
+
+router.get('/hotels', (req,res) => {
+    axios.get("https://developers.expediagroup.com/docs/static/content/rapid/lodging/content/assets/EPS_Rapid_v3_postman_collection.json?lang=en-US").then(resultat => {
+        res.json(resultat.data);
+    })
+})
 
 router.get('/', (req,res) => {
     res.send(`${package.description} - v${package.version}`);
