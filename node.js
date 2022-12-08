@@ -31,6 +31,8 @@ router.get('/events', (req,res) => {
 })
 
 
+// Noch keinen geeigneten API-Link für "Hotels" gefunden, aktueller Link ist in .yaml statt .json
+
 router.get('/hotels', (req,res) => {
     axios.get("https://developers.expediagroup.com/docs/static/content/api/assets/openapi/rapid-api.yaml?lang=en-US").then(resultat => {
         res.json(resultat.data);
