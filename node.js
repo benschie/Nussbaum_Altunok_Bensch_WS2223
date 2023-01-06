@@ -39,6 +39,7 @@ app.get('/events', (req, res) => {
       // Wenn es keine Events gibt, dann sende eine Nachricht zurück an den Benutzer, dass keine Events in der Stadt gefunden wurden
       return res.send(`
         <h1>Es gibt keine anstehenden Events in ${city}. Bitte geben Sie eine andere Stadt ein.</h1>
+        <h5>Gloria, East Lansing, Hamden, Ann Arbor, Tuscaloosa, Madison, Iowa City, Las Vegas, Detroit oder New York eingeben</h5>
         <form action="/events" method="GET">
           <label for="city">Stadt:</label>
           <input type="text" name="city" id="city" required>
