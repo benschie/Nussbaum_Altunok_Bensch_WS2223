@@ -14,30 +14,22 @@ const app = express();
 app.use(cors({ origin: /http:\/\/localhost/ }));
 app.options('*', cors());
 
+
 // Funktion, die die Hotelliste von der API abruft
-async function getHotels(city) {
-    try {
-      // Sendet eine Anfrage an die Hotellook API, um die Liste der Hotels für die angegebene Stadt abzurufen
-      const response = await axios.get(`https://engine.hotellook.com/api/v2/lookup.json?query=${city}`);
-      // Gibt die Liste der Hotels zurück
-      return response.data.hotels;
-    } catch (error) {
-      console.error(error);
-    }
-}
-
-function showHotels(city){
-    // Holt die Hotelliste von der API
-    getHotels(city).then((hotels) => {
-
-        // Iteriert durch die Hotelliste und erstelle HTML-Blockelemente für jedes Hotel
-        const hotelList = hotels.map((hotel) => {
-            return `<li>${hotel.results.hotels.lable}</li>`;
-        }).join('');
-        // Fügt die Hotelliste zur Seite hinzu
-        $("#hotel-container").html(`<ul>${hotelList}</ul>`);
+async function showHotels(city) {
+    return new Promise((resolve, reject) => {
+        axios.get(`https://engine.hotellook.com/api/v2/lookup.json?query=${city}`)
+        .then(response => {
+            // Gibt die Liste der Hotels zurück
+            const data = response.data;
+            resolve(data);
+        })
+        .catch(error => {
+            reject(error);
+        });
     });
 }
+
 
 // Klick-Handler für den "Nächstes Hotel anzeigen"-Button
 $("#show-hotel-button").click(showHotels);
@@ -106,7 +98,31 @@ app.get('/events', (req, res) => {
                               <p>Beginn: ${new Date(event.datetime_local).toLocaleTimeString()}</p>
                               <p>Preis: ${event.stats.average_price ? `$${event.stats.average_price}` : 'Kostenlos'}</p>
                               <a href="${event.url}" target="_blank">Weitere Informationen</a>
-                              <button id="show-hotel-button" onclick="${showHotels(city)}">Nächstes Hotel anzeigen</button>
+                              <button id="show-hotel-button" onclick="${showHotels(city)
+                                                            .then(data => {
+
+                                                                console.log(data)
+
+                                                                const hotels = data.results.hotels;
+                                                                const showHotelButton = document.getElementById("show-hotel-button");
+                                                                const hotelInfoDiv = document.getElementById("hotel-info");
+                                                        
+                                                                let hotelIndex = 0;
+                                                        
+                                                                showHotelButton.addEventListener("click", () => {
+                                                                    const currentHotel = hotels[hotelIndex];
+                                                                    hotelInfoDiv.innerHTML = `
+                                                                    <p>Hotel Name: ${currentHotel.name}</p>
+                                                                    <p>Preis: ${currentHotel.price}</p>
+                                                                    <p>Stadt: ${currentHotel.city}</p>
+                                                                    `;
+                                                                    hotelIndex = (hotelIndex + 1) % hotels.length;
+                                                                });
+                                                            })
+                                                            .catch(error => {
+                                                                console.log(error);
+                                                            })}">Nächstes Hotel anzeigen</button>
+                              <div id="hotel-info"></div>
                             </details>
                         `
                     )})
