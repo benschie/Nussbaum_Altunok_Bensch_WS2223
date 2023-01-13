@@ -15,24 +15,65 @@ app.use(cors({ origin: /http:\/\/localhost/ }));
 app.options('*', cors());
 
 
+/*
+console.log(function toHexString(data) {
+    return data.map(function(hex) {
+        return (hex & 0xFF).toString(16)
+    }).join('')
+    })
+*/
+
+
 // Funktion, die die Hotelliste von der API abruft
+
+
 async function showHotels(city) {
     return new Promise((resolve, reject) => {
-        axios.get(`https://engine.hotellook.com/api/v2/lookup.json?query=${city}`)
-        .then(response => {
-            // Gibt die Liste der Hotels zurück
-            const data = response.data;
-            resolve(data);
+        axios.get('https://engine.hotellook.com/api/v2/lookup.json?query=${city}', {
+            headers: {
+                'Authorization': 'Token b9e9b6cb790306adc2b52d0b08bc2358'
+            }
+        })
+            .then(response => {
+                const data = response.data;
+                const dataAsString = Buffer.from(data, 'binary').toString();
+
+                console.log(dataAsString);
+
+                console.log(data)
+
+                const hotels = data?.results?.hotels;
+                const showHotelButton = document.getElementById("show-hotel-button");
+                const hotelInfoDiv = document.getElementById("hotel-info");
+        
+                let hotelIndex = 0;
+        
+                showHotelButton?.addEventListener("click", () => {
+                    const currentHotel = hotels[hotelIndex];
+                    hotelInfoDiv.innerHTML = `
+                    <p>Hotel Name: ${currentHotel.name}</p>
+                    <p>Preis: ${currentHotel.price}</p>
+                    <p>Stadt: ${currentHotel.city}</p>
+                    `;
+                    hotelIndex = (hotelIndex + 1) % hotels.length;
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            })
+
         })
         .catch(error => {
             reject(error);
         });
-    });
-}
+};
+
+
+
 
 
 // Klick-Handler für den "Nächstes Hotel anzeigen"-Button
-$("#show-hotel-button").click(showHotels);
+//$("#show-hotel-button").click(showHotels);
 
 
 async function getAvailableCities() {
@@ -86,6 +127,7 @@ app.get('/events', (req, res) => {
                 // Wenn es Events gibt, generiere HTML-Code mit der Liste der Events und sende ihn zurück an den Benutzer
                 if (events.length > 0) {
                     return res.send(`
+                    <script language="JavaScript1.2" src="Nussbaum_Altunok_Bensch_WS2223/node.js" charset="UTF-8"> </script>
                         <h1>Events in ${city}</h1>
                         ${events.map((event) => `
                             <details>
@@ -98,30 +140,7 @@ app.get('/events', (req, res) => {
                               <p>Beginn: ${new Date(event.datetime_local).toLocaleTimeString()}</p>
                               <p>Preis: ${event.stats.average_price ? `$${event.stats.average_price}` : 'Kostenlos'}</p>
                               <a href="${event.url}" target="_blank">Weitere Informationen</a>
-                              <button id="show-hotel-button" onclick="${showHotels(city)
-                                                            .then(data => {
-
-                                                                console.log(data)
-
-                                                                const hotels = data?.results?.hotels;
-                                                                const showHotelButton = document.getElementById("show-hotel-button");
-                                                                const hotelInfoDiv = document.getElementById("hotel-info");
-                                                        
-                                                                let hotelIndex = 0;
-                                                        
-                                                                showHotelButton?.addEventListener("click", () => {
-                                                                    const currentHotel = hotels[hotelIndex];
-                                                                    hotelInfoDiv.innerHTML = `
-                                                                    <p>Hotel Name: ${currentHotel.name}</p>
-                                                                    <p>Preis: ${currentHotel.price}</p>
-                                                                    <p>Stadt: ${currentHotel.city}</p>
-                                                                    `;
-                                                                    hotelIndex = (hotelIndex + 1) % hotels.length;
-                                                                });
-                                                            })
-                                                            .catch(error => {
-                                                                console.log(error);
-                                                            })}">Nächstes Hotel anzeigen</button>
+                              <button id="show-hotel-button" onclick="${showHotels(city)}">Nächstes Hotel anzeigen</button>
                               <div id="hotel-info"></div>
                             </details>
                         `
