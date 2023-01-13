@@ -103,13 +103,13 @@ app.get('/events', (req, res) => {
 
                                                                 console.log(data)
 
-                                                                const hotels = data.results.hotels;
+                                                                const hotels = data?.results?.hotels;
                                                                 const showHotelButton = document.getElementById("show-hotel-button");
                                                                 const hotelInfoDiv = document.getElementById("hotel-info");
                                                         
                                                                 let hotelIndex = 0;
                                                         
-                                                                showHotelButton.addEventListener("click", () => {
+                                                                showHotelButton?.addEventListener("click", () => {
                                                                     const currentHotel = hotels[hotelIndex];
                                                                     hotelInfoDiv.innerHTML = `
                                                                     <p>Hotel Name: ${currentHotel.name}</p>
