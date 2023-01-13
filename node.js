@@ -73,7 +73,7 @@ async function showHotels(city) {
 
 
 // Klick-Handler für den "Nächstes Hotel anzeigen"-Button
-//$("#show-hotel-button").click(showHotels);
+$("#show-hotel-button").click(showHotels);
 
 
 async function getAvailableCities() {
