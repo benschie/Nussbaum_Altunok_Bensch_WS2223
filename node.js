@@ -26,23 +26,27 @@ console.log(function toHexString(data) {
 
 // Funktion, die die Hotelliste von der API abruft
 
-
 async function showHotels(city) {
-    return new Promise((resolve, reject) => {
-        axios.get('https://engine.hotellook.com/api/v2/lookup.json?query=${city}', {
-            headers: {
-                'Authorization': 'Token b9e9b6cb790306adc2b52d0b08bc2358'
-            }
-        })
+    //return new Promise((resolve, reject) => {
+        axios.get(`https://engine.hotellook.com/api/v2/lookup.json?query=${city}`)
+            // headers: {
+            //     'Authorization': 'Token b9e9b6cb790306adc2b52d0b08bc2358'
+            // }})
             .then(response => {
-                const data = response.data;
-                const dataAsString = Buffer.from(data, 'binary').toString();
+            //     const data = response.data;
+            //     const dataAsString = Buffer.from(data, 'binary').toString();
 
-                console.log(dataAsString);
+            //     console.log(dataAsString);
 
-                console.log(data)
+            //    console.log(data)
+            console.log(response)
+            const hotels = response.data.hotels;
+            console.log(hotels)
+            console.log(city)
+            //if (hotels.length > 0) 
+              //  return res.send
 
-                const hotels = data?.results?.hotels;
+                //const hotels = data?.results?.hotels;
                 const showHotelButton = document.getElementById("show-hotel-button");
                 const hotelInfoDiv = document.getElementById("hotel-info");
         
@@ -56,13 +60,15 @@ async function showHotels(city) {
                     <p>Stadt: ${currentHotel.city}</p>
                     `;
                     hotelIndex = (hotelIndex + 1) % hotels.length;
+                    
+
                 });
             })
             .catch(error => {
                 console.log(error);
             })
 
-        })
+       // })
         .catch(error => {
             reject(error);
         });
@@ -97,7 +103,6 @@ async function getAvailableCities() {
 app.get('/events', (req, res) => {
     // Holt den Wert der query-Parameter 'city' aus der Anfrage
     const city = req.query.city;
-  
     // Wenn 'city' nicht vorhanden ist, gib den HTML-Code zurück, der das Eingabefeld für den Benutzer anzeigt
     if (!city) {
         // Lädt die Liste der verfügbaren Städte aus der API
@@ -122,6 +127,7 @@ app.get('/events', (req, res) => {
             .then((response) => {
                 // Extrahiert die benötigten Daten aus der API-Antwort
                 const events = response.data.events;
+                console.log(response)
 
                 const dropDownCity = $("#city").val();
                 // Wenn es Events gibt, generiere HTML-Code mit der Liste der Events und sende ihn zurück an den Benutzer
